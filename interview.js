@@ -21,7 +21,8 @@ app.use('/users',userRoute);
 
 
    // To serve the static html/js/css in public foler
-   app.use(express.static("public"));   
+   ///app.use(express.static("public"));   
+   app.use(express.static("reaction"));   
    
    // To parse the application/x-www-form-urlencoded    
    var urlencodedParser = bodyParser.urlencoded({ extended: false })

@@ -1,7 +1,5 @@
 const mysql = require('mysql');
 
-
-
 const DB = {};          
 DB.connect = ()=>{
     return con = mysql.createConnection({
@@ -42,9 +40,12 @@ DB.insertFile= (userid,filesrc,cb)=>{
         if (err) throw err;
         console.log("Connected!");
         
-        con.query("insert into files(userId,src) values("+userid+",'"+filesrc+"')", function (err, result) {
+        con.query("insert into files(userId,src) values("+userid+",'"+filesrc+"')", function (err, filleRow) {
         if (err) throw err;
-            cb(result);
+        
+            con.query("select * from files where id ="+filleRow.insertId, function (err, result) {
+                cb(result.map(f=>({id:f.id,userid:f.userId,src:f.src}))[0]);
+            });
         });
       });
 }

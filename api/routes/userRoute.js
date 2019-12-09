@@ -59,7 +59,7 @@ router.get('/:id/files',(req,res)=>{
 });
 router.post('/:id/files',(req,res)=>{
     // let's upload the file
-    console.log('Upload a file '+req.file+' by '+req.params.id);
+    console.log('Upload a file '+req.file.originalname+' by '+req.params.id);
     
     //const user = db.find(u=>u.id == req.params.id);
     //if(!user){
@@ -68,9 +68,9 @@ router.post('/:id/files',(req,res)=>{
 
     //user.files.push({src:req.file.originalname});
     db.insertFile(req.params.id,req.file.originalname,(r)=>{
-        res.json(req.file.originalname);
-    });
-    
+        console.log(r);
+        res.json(r);
+    });    
 });
 router.put('/:id/files',(req,res)=>{
 
