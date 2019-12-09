@@ -71,7 +71,7 @@ class Farmers extends React.Component{
         .then((result)=>{  
             
             if(result){                        
-              var newFiles = [...this.state.selectedUSer.files,result.data.src];
+              var newFiles = [...this.state.selectedUSer.files,result.data];
               var newUser = {...this.state.selectedUSer,files:newFiles};
               console.log(newUser);
                 this.setState({

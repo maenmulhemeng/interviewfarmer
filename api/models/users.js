@@ -1,4 +1,6 @@
 const mysql = require('mysql');
+const fileModel = require('./fileModel');
+const userModel = require('./userModel');
 
 const DB = {};          
 DB.connect = ()=>{
@@ -15,10 +17,9 @@ DB.selectUsers= (cb)=>{
     con.connect(function(err) {
         if (err) throw err;
         console.log("Connected!");
-        con.query("select * from user", function (err, result) {
-        if (err) throw err;
-          
-            cb( result.map(r=>({id:r.id,name:r.name})));
+        con.query("select * from users", function (err, result) {
+        if (err) throw err;                        
+            cb( result.map(r=>(userModel(r.id,r.name))));
         });
       });
 }
@@ -42,10 +43,24 @@ DB.insertFile= (userid,filesrc,cb)=>{
         
         con.query("insert into files(userId,src) values("+userid+",'"+filesrc+"')", function (err, filleRow) {
         if (err) throw err;
-        
-            con.query("select * from files where id ="+filleRow.insertId, function (err, result) {
-                cb(result.map(f=>({id:f.id,userid:f.userId,src:f.src}))[0]);
-            });
+            
+            con.commit(function(err) {
+                if (err) { 
+                  con.rollback(function() {
+                    throw err;
+                  });
+                }
+                console.log('Transaction Complete.');
+                //console.log("select * from files where id ="+filleRow.insertId);
+                con.query("select * from files where id ="+filleRow.insertId, function (err, result) {
+                    console.log(result);
+                    const files = result.map(f=>(fileModel(f.id,f.userId,f.src)));
+                    
+                    cb(files[0]);
+                    con.end();
+                });
+                
+              });            
         });
       });
 }
