@@ -1,4 +1,6 @@
 import React from 'react';
+import {Row,Col,ListGroup,Container,Jumbotron} from 'react-bootstrap';
+import Note from './Note'
 const axios = require("axios");
 
 //import './App.css';
@@ -7,7 +9,8 @@ class Farmers extends React.Component{
     super(props);
     this.state = {
       users:[],    
-      selectedUSer:{files:[]}
+      selectedUSer:{files:[]},
+      showList:false
     }
     this.getFiles = this.getFiles.bind(this);
     this.chooseFile = this.chooseFile.bind(this);
@@ -33,7 +36,9 @@ class Farmers extends React.Component{
 
   getFiles(e,userid){
     e.preventDefault();
-    
+    this.setState({
+      showList:true
+    });
     fetch('/users/'+userid+'/files')
     .then((result)=>{  
         
@@ -41,10 +46,10 @@ class Farmers extends React.Component{
             return result.json();            
         }
     }).then(r=>{
-        const user = this.state.users.find(e=>e.id == userid);
+        const user = this.state.users.find(e=>e.id === userid);
         const newUser = {...user,files:r};
         this.setState({
-            users:this.state.users.map(e=>e.id==userid? newUser:e),
+            users:this.state.users.map(e=>e.id ===userid? newUser:e),
             selectedUSer:newUser
         })
         console.log(this.state.users);  
@@ -84,31 +89,61 @@ class Farmers extends React.Component{
       
     return (
       <div className="App">
+          <Note />
           <section id="farmersSection">
-          <h2>
+          <h3>
               List of farmers
-          </h2>
-          <ul id="farmers">
-          {this.state.users.map((u,index)=>(<li key={index}><a onClick={(e)=>this.getFiles(e,u.id)} >{u.name}</a></li>))}        
-          </ul>
+          </h3>
+          <Container>
+  <Row>
+    <Col>
+    <ListGroup  id="farmers">
+          {this.state.users.map((u,index)=>(
+              <ListGroup.Item action href={"#link"+index} 
+              onClick={(e)=>this.getFiles(e,u.id)} key={index}>{u.name}
+              </ListGroup.Item>))}                
+          </ListGroup>
+    </Col>
+    </Row>
+    </Container>
+          
+            {this.state.showList? <FileList upload={this.submit} chooseFile={this.chooseFile} user={this.state.selectedUSer}/> : <div></div>}
+          
       </section>   
-      <section id="farmerFilesSection">
-        <h2>
-            List of files
-        </h2>
-        <ul id="files">
-            {this.state.selectedUSer.files.map((f,index) => <li key={index}><a href={"images/"+f.src}>{f.src}</a></li>)}
-        </ul>
-       
-
-        <form onSubmit={(e)=>this.submit(e)} id="farmer" method="POST" encType="multipart/form-data">
-         
-            <input type="file" id="attachment" name="attachment" onChange={this.chooseFile}/>
-            <button type="submit">Submit Request</button>
-        </form>
-    </section>
+     
       </div>
     );
   }
 }
 export default Farmers;
+
+function FileList(props){
+  return (
+    <section id="farmerFilesSection">
+    <h3>
+        The files of {props.user.name!==undefined?props.user.name.charAt(0).toUpperCase() +props.user.name.substring(1):""}
+    </h3>
+    <Container>
+    <Row>
+        <Col>
+        <ListGroup id="files">            
+              {props.user.files.map((f,index) =>
+              <ListGroup.Item action href={"images/"+f.src} key={index}>{f.src} 
+              </ListGroup.Item>)}
+          </ListGroup>
+          </Col>
+        <Col>
+          <form onSubmit={(e)=>props.upload(e)} id="farmer" method="POST" encType="multipart/form-data">
+            
+            <input type="file" id="attachment" name="attachment" onChange={props.chooseFile}/>
+            <button type="submit">Upload File</button>
+        </form>
+        </Col>  
+      </Row>
+    </Container>
+
+    
+</section>
+  );
+}
+
