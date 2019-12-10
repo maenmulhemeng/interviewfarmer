@@ -1,6 +1,18 @@
+/*
+  The component that shows a list of users, I call them farmers for convinient 
+  the component talks to the server to get the list of users
+  using two method. The first is fetch and the second is axios 
+  just to show that we can handle talking to the server using different methods. 
+  The component passes parameter and handlers to its child i.e the parent configure the children
+
+*/
+
 import React from 'react';
-import {Row,Col,ListGroup,Container,Jumbotron} from 'react-bootstrap';
-import Note from './Note'
+import {Image,Row,Col,ListGroup,Container} from 'react-bootstrap';
+import Note from './Note';
+import FileList from './FileList';
+import MyHeader from './MyHeader';
+import MyFooter from './MyFooter';
 const axios = require("axios");
 
 //import './App.css';
@@ -16,9 +28,8 @@ class Farmers extends React.Component{
     this.chooseFile = this.chooseFile.bind(this);
     this.submit = this.submit.bind(this);
   }
-  componentDidMount(){    
-    
-    
+  
+  componentDidMount(){          
     const httpOptions ={method:'GET'};
     fetch('/users/',httpOptions)
     .then((result)=>{  
@@ -89,61 +100,37 @@ class Farmers extends React.Component{
       
     return (
       <div className="App">
+          <MyHeader />
           <Note />
-          <section id="farmersSection">
-          <h3>
-              List of farmers
-          </h3>
-          <Container>
-  <Row>
-    <Col>
-    <ListGroup  id="farmers">
-          {this.state.users.map((u,index)=>(
-              <ListGroup.Item action href={"#link"+index} 
-              onClick={(e)=>this.getFiles(e,u.id)} key={index}>{u.name}
-              </ListGroup.Item>))}                
-          </ListGroup>
-    </Col>
-    </Row>
-    </Container>
           
-            {this.state.showList? <FileList upload={this.submit} chooseFile={this.chooseFile} user={this.state.selectedUSer}/> : <div></div>}
+          <section id="farmersSection">
+          <Container>
+          <Row><h3>List of Farmers</h3></Row>
+            <Row>
+              <Col>
+                <ListGroup  id="farmers">
+                      {this.state.users.map((u,index)=>(
+                          <ListGroup.Item action href={"#link"+index} 
+                          onClick={(e)=>this.getFiles(e,u.id)} key={index}>
+                            {u.name!==undefined?u.name.charAt(0).toUpperCase() +u.name.substring(1):""}
+                            
+                          </ListGroup.Item>))}                
+                </ListGroup>
+              </Col>
+              </Row>
+              <Row>
+                {this.state.showList? <FileList upload={this.submit} chooseFile={this.chooseFile} user={this.state.selectedUSer}/> : <div></div>}
+              </Row>
+              
+          </Container>
+          
+            
           
       </section>   
-     
+      <br/>
+          <MyFooter />
       </div>
     );
   }
 }
 export default Farmers;
-
-function FileList(props){
-  return (
-    <section id="farmerFilesSection">
-    <h3>
-        The files of {props.user.name!==undefined?props.user.name.charAt(0).toUpperCase() +props.user.name.substring(1):""}
-    </h3>
-    <Container>
-    <Row>
-        <Col>
-        <ListGroup id="files">            
-              {props.user.files.map((f,index) =>
-              <ListGroup.Item action href={"images/"+f.src} key={index}>{f.src} 
-              </ListGroup.Item>)}
-          </ListGroup>
-          </Col>
-        <Col>
-          <form onSubmit={(e)=>props.upload(e)} id="farmer" method="POST" encType="multipart/form-data">
-            
-            <input type="file" id="attachment" name="attachment" onChange={props.chooseFile}/>
-            <button type="submit">Upload File</button>
-        </form>
-        </Col>  
-      </Row>
-    </Container>
-
-    
-</section>
-  );
-}
-
