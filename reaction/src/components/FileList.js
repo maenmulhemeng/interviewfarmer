@@ -15,7 +15,8 @@ function FileList(props){
           <Col>
           <ListGroup id="files">            
                 {props.user.files.map((f,index) =>
-                <ListGroup.Item action href={"images/"+f.src} key={index}>{f.src} 
+                
+                <ListGroup.Item action href={"/users/"+props.user.id+"/files/"+f.src} key={index}>{f.src} 
                 </ListGroup.Item>)}
             </ListGroup>
             </Col>

@@ -65,6 +65,9 @@ module.exports.upload = (req,res)=>{
 module.exports.download = (req,res)=>{    
     // let's download the file    
     db.selectUserFiles(req.params.id,(files)=>{
-        res.download(__dirname+"/../../public/images/"+req.params.fileId);
+        const f = files.find(f => f.src === req.params.fileId);
+        if (f !== undefined){
+            res.download(__dirname+"/../../public/images/"+req.params.fileId);
+        }
     });  
 };
