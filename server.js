@@ -1,4 +1,4 @@
-/* This is the web server. We use here express framework which allowing NodeJs
+/* This is the web server. We use here express framework which allows NodeJs
 to handle REST application. 
 */
 

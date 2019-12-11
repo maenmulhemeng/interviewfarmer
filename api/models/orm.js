@@ -1,7 +1,7 @@
 /*
   ORM is used to map the data models objects (classes) in the application with the data rows in the DB
   here I use Sequelize just to show that we can use a predefined ORM package
-  there is nothing special about it now, we can use another package
+  there is nothing special about it now and of course we can use another package
 
   Author: Maen Mulhem
 */

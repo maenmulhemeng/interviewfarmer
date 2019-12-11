@@ -10,7 +10,7 @@ This project is a part of a technical interview for FarmAtHand. It uses three ma
 
 ## Initializing the DB
  1. Launch MySQL Database server 
- 2. create a database and give it a name 'interview'
+ 2. create a database and give it a name e.g 'interview'
  3. execut the script in the interview.sql to insert some data 
  
 ## Initialize the node server
@@ -50,4 +50,4 @@ If you want to put the application in the development mode please
  > remove the old files except `images`, `img`
  4. Past the new ones 
  5. **Run the project**
- 
+

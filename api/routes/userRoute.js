@@ -1,6 +1,6 @@
 /*
-This router is responsible for handling the requests that related to Users
-and the router talks to user controllers and route the specidif reqest to the specific handler
+This router is responsible of handling the requests that related to Users
+Plus the router talks to user controllers and routes the specified reqest to the specific handler
 
 Author: Maen Mulhem
  */
@@ -14,7 +14,7 @@ const controller = require('../controllers/usersController');
 const uploaderPath = '/../../public/images';
 const notSupported = (req,res)=>(res.end('Not supported'));
 
-// First, let's configire the Multer 
+// First, let's configure the Multer 
 // to parse the multipart/form-data   
 // which means allowing the server to handle
 // the upload files requests

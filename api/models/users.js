@@ -1,8 +1,8 @@
 /*
-  We build here an Access Layer from Skratch just to show that we can 
+  We build here an Access Layer from skratch just to show that we can use 
   this pattern if , for some reason, we do't want to use ORM. 
   Here, the access layer connects the DB and it uses the Data Model class 
-  to map the result of the queries into more understandable objects
+  to map the result of the queiries into more understandable objects
 
   Author: Maen Mulhem
 */

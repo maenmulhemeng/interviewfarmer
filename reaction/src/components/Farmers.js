@@ -1,10 +1,9 @@
 /*
-  The component that shows a list of users, I call them farmers for convinient 
+  This component shows a list of users, I call them farmers for convinient 
   the component talks to the server to get the list of users
-  using two method. The first is fetch and the second is axios 
+  using two methods. The first one is Fetch and the second one is Axios 
   just to show that we can handle talking to the server using different methods. 
-  The component passes parameter and handlers to its child i.e the parent configure the children
-
+  The component passes parameters and handlers to its child i.e the parent configures the children
 */
 
 import React from 'react';
@@ -97,7 +96,13 @@ class Farmers extends React.Component{
         });
   }
   render() {
-      
+      const users = this.state.users.map((u,index)=>(
+        <ListGroup.Item action href={"#link"+index} 
+        onClick={(e)=>this.getFiles(e,u.id)} key={index}>
+          {u.name!==undefined?u.name.charAt(0).toUpperCase() +u.name.substring(1):""}
+          
+        </ListGroup.Item>));
+
     return (
       <div className="App">
           <MyHeader />
@@ -107,14 +112,9 @@ class Farmers extends React.Component{
           <Container>
           <Row><h3>List of Farmers</h3></Row>
             <Row>
-              <Col>
+              <Col>              
                 <ListGroup  id="farmers">
-                      {this.state.users.map((u,index)=>(
-                          <ListGroup.Item action href={"#link"+index} 
-                          onClick={(e)=>this.getFiles(e,u.id)} key={index}>
-                            {u.name!==undefined?u.name.charAt(0).toUpperCase() +u.name.substring(1):""}
-                            
-                          </ListGroup.Item>))}                
+                      {this.state.users !== undefined? users:<div></div>}                
                 </ListGroup>
               </Col>
               </Row>

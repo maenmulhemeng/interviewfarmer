@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <header>
+        <script src="js/jquery-3.4.1.min.js" type="text/javascript"></script>
+        <script>
+            $(document).ready(function(){
+                $('#farmersSection').show();
+                $('#farmerFilesSection').hide();
+                $.get({
+                    url:'/users',
+                    success:function(response){                        
+                        response.forEach(element => {
+                            $('#farmers').append('<li><a class="userLink" href="/users/'+element.id+'/files" data-userid="'+element.id+'">'+element.name+'</a></li>');                                                            
+                        });
+                        
+                    }
+                })
+                $(document).on('click','.userLink',function(e){
+                    e.preventDefault();
+                    const userid = $(this).data('userid');
+                    $('#farmersSection').hide();
+                    $('#farmerFilesSection').show();
+                    $.get({
+                    url:$(this).attr('href'),
+                        success:function(response){
+                            $('#files').empty();
+                           // console.log(response);
+                            response.forEach(element => {
+                                $('#files').append('<li><a class="fileLink" href="/users/'+userid+'/files/'+element.src+'">'+element.src+'</a></li>');                                
+                                //$('#files').append('<li><a href="/images/'+element.src+'">'+element.src+'</a></li>');                                
+                            });
+
+                            $('#farmer').attr('action','users/'+userid+'/files');
+                            $('#farmer').data('userid',userid);
+                        }
+                    })
+                });
+            
+                $("#farmer").submit(function(e) {
+                    e.preventDefault();
+                     var url = $(this).attr('action');
+                    var req = new XMLHttpRequest()
+                    var file = document.getElementById('attachment').files[0];
+                    var data = new FormData()
+                    const userid = $(this).data('userid');
+                    data.append('attachment', file)
+                    req.addEventListener("load", function(response){
+                        const title = req.responseText.slice(1,-1);
+                        $('#files').append('<li><a class="fileLink" href="/users/'+userid+'/files/'+title+'">'+title+'</a></li>');                                
+                    });
+                    req.open('POST', url)
+                    req.send(data)                 
+                });
+            });
+        </script>
+    </header>
+    <body>
+    <section id="farmersSection">
+        <h2>
+            List of farmers
+        </h2>
+        <ul id="farmers">
+            
+        </ul>
+    </section>    
+    <section id="farmerFilesSection">
+        <h2>
+            List of files
+        </h2>
+        <ul id="files">
+
+        </ul>
+       
+
+        <form id="farmer" method="POST" action="" enctype="multipart/form-data">
+         
+            <input type="file" id="attachment" name="attachment"/>
+            <button type="submit">Submit Request</button>
+        </form>
+    </section>
+    </body>
+</html>
