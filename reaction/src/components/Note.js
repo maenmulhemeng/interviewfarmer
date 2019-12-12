@@ -4,7 +4,7 @@ function Note(props){
     return (
       <Jumbotron fluid>
         <Container>
-          <h1>Farmerathand Interview</h1>
+          <h1>Farmathand Interview</h1>
           <p>The idea of the project is so simple. The server sends a list of Farmers (users) allowing you 
             to navigate through them. Once you choose a farmer, the list of the farmer's files will be shown and an uploader component will be too. 
             You can upload a new file and notice the change that happens to the list. 

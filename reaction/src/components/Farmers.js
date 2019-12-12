@@ -96,13 +96,15 @@ class Farmers extends React.Component{
         });
   }
   render() {
-      const users = this.state.users.map((u,index)=>(
-        <ListGroup.Item action href={"#link"+index} 
-        onClick={(e)=>this.getFiles(e,u.id)} key={index}>
-          {u.name!==undefined?u.name.charAt(0).toUpperCase() +u.name.substring(1):""}
-          
-        </ListGroup.Item>));
 
+      var users =[];
+      if (this.state.users!==undefined){ 
+        users = this.state.users.map((u,index)=>(
+          <ListGroup.Item action href={"#link"+index} 
+          onClick={(e)=>this.getFiles(e,u.id)} key={index}>
+            {u.name!==undefined?u.name.charAt(0).toUpperCase() +u.name.substring(1):""}          
+          </ListGroup.Item>));
+      }
     return (
       <div className="App">
           <MyHeader />

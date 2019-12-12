@@ -12,7 +12,11 @@ const controller = require('../controllers/usersController');
 
 // private methods and variables
 const uploaderPath = '/../../public/images';
-const notSupported = (req,res)=>(res.end('Not supported'));
+const notSupported = (req,res,next)=>{
+  var err = new Error(req.method+':'+ req.url+' service is not provided now');
+  err.status = 403;
+  next(err);
+};
 
 // First, let's configure the Multer 
 // to parse the multipart/form-data   

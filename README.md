@@ -7,7 +7,8 @@ This project is a part of a technical interview for FarmAtHand. It uses three ma
  * Install the dependencies for both the server and the client 
   1. Go to the *main folder* and type `npm install server --save`
   2. Go to the folder `reaction` and type `npm install server --save`
-
+* And you need to be sure that you installed MySQL server
+> Prefered to use [XAMPP](https://www.apachefriends.org/download.html)
 ## Initializing the DB
  1. Launch MySQL Database server 
  2. create a database and give it a name e.g 'interview'

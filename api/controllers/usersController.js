@@ -8,14 +8,14 @@ Author: Maen Mulhem
 const orm = require('../models/orm');
 const db = require('../models/users');
 
-module.exports.getUsers = (req,res)=>{
+module.exports.getUsers = (req,res,next)=>{
     console.log('Get users');
 
     orm.users.findAll( {attributes: ['id', 'name']}).then(function (users) {
         u = users.map(el => el.get({ plain: true }));
         console.log(u);
         res.json(u)
-    });
+    }).catch((err)=>(next(err,'Fina All Exception')));
 
     // Another solution
     //res.json(db);
@@ -25,18 +25,20 @@ module.exports.getUsers = (req,res)=>{
     });        */
 }
 
-module.exports.getUserFiles = (req,res)=>{
+module.exports.getUserFiles = (req,res,next)=>{
     // let's return a list of the user's files
     console.log('Get users '+req.params.id);  
     orm.files.findAll( 
         {attributes: ['id', 'src','userId'], 
             where: {
                 userId:req.params.id                
-        }}).then(function (files) {
+        }})
+        .then(function (files) {
             f = files.map(el => el.get({ plain: true }));
             console.log(f);
             res.json(f)
-        });
+        })
+        .catch((err)=>(next(err,'Get Users Files')));
 
     // Another solution
     //const user = db.find(u=>u.id == req.params.id);
@@ -46,7 +48,8 @@ module.exports.getUserFiles = (req,res)=>{
     });*/
 };
 
-module.exports.upload = (req,res)=>{
+module.exports.upload = (req,res,next)=>{
+    try{
     // let's upload the file
     
     // build a new name for the uploaded file
@@ -56,18 +59,30 @@ module.exports.upload = (req,res)=>{
 
     // Save it in DB
     db.insertFile(req.params.id,newName,(r)=>{        
+        
         console.log(r);
         res.json(r);
-    });   
+    }); 
+    }  catch(err){
+        return next(err,'Error in upload');
+    }
         
 };
 
-module.exports.download = (req,res)=>{    
-    // let's download the file    
-    db.selectUserFiles(req.params.id,(files)=>{
-        const f = files.find(f => f.src === req.params.fileId);
-        if (f !== undefined){
-            res.download(__dirname+"/../../public/images/"+req.params.fileId);
-        }
-    });  
+module.exports.download = (req,res,next)=>{    
+    try{
+        // let's download the file    
+        db.selectUserFiles(req.params.id,(files)=>{
+            const f = files.find(f => f.src === req.params.fileId);
+            if (f !== undefined){
+                res.download(__dirname+"/../../public/images/"+req.params.fileId);
+            }else{
+                var err = new Error('File is not in the DB'+req.params.fileId);
+                err.status = 404;
+                next(err);
+            }
+        }); 
+    }catch(err){
+        return next(err,"Error in Download");
+    }
 };
